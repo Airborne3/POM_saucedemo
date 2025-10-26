@@ -1,6 +1,8 @@
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+import allure
+import os
 
 @pytest.fixture
 def driver():
@@ -13,4 +15,11 @@ def driver():
     options.add_experimental_option("prefs", prefs)
     driver = webdriver.Chrome(options=options)
     yield driver
+
+    # Скриншот теста
+    if hasattr(driver, "get_screenshot_as_png"):
+        allure.attach(driver.get_screenshot_as_png(),
+                      name="screenshot",
+                      attachment_type=allure.attachment_type.PNG)
+
     driver.quit()
